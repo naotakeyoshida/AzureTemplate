@@ -1,0 +1,395 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_DemoVM_name": {
+            "defaultValue": "DemoVM",
+            "type": "String"
+        },
+        "virtualNetworks_DemoVnet_name": {
+            "defaultValue": "DemoVnet",
+            "type": "String"
+        },
+        "networkInterfaces_DemoNic_name": {
+            "defaultValue": "DemoNic",
+            "type": "String"
+        },
+        "publicIPAddresses_DemoPublicIPAddress_name": {
+            "defaultValue": "DemoPublicIPAddress",
+            "type": "String"
+        },
+        "extensions_BGInfo_name": {
+            "defaultValue": "BGInfo",
+            "type": "String"
+        },
+        "subnets_DemoSubnet_name": {
+            "defaultValue": "DemoSubnet",
+            "type": "String"
+        },
+        "networkSecurityGroups_DemoNetworkSecurityGroup_name": {
+            "defaultValue": "DemoNetworkSecurityGroup",
+            "type": "String"
+        },
+        "securityRules_DemoNSGRule_name": {
+            "defaultValue": "DemoNSGRule",
+            "type": "String"
+        },
+        "virtualMachines_DemoVM_id": {
+            "defaultValue": "/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Compute/disks/DemoOsDisk",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Compute/virtualMachines/DemoVM' から一般化されました。",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_DemoVM_name')]",
+            "apiVersion": "2017-03-30",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D1"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "DemoOsDisk",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[parameters('virtualMachines_DemoVM_id')]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_DemoVM_name')]",
+                    "adminUsername": "naotake",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_DemoNic_name'))]"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_DemoNic_name'))]"
+            ]
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Network/networkInterfaces/DemoNic' から一般化されました。",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_DemoNic_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "035ec1f5-ece3-46ee-883a-280e903b58d7",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "etag": "W/\"515b5347-6dac-4b11-be4f-68a7c7bea51b\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "192.168.1.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_DemoPublicIPAddress_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_DemoVnet_name'), parameters('subnets_DemoSubnet_name'))]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [],
+                    "appliedDnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_DemoVM_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_DemoPublicIPAddress_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_DemoVnet_name'), parameters('subnets_DemoSubnet_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_DemoVM_name'))]"
+            ]
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Network/networkSecurityGroups/DemoNetworkSecurityGroup' から一般化されました。",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "07d2f06a-acbc-4bff-9ec8-15c180e67d14",
+                "securityRules": [
+                    {
+                        "name": "DemoNSGRule",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1000,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ],
+                "defaultSecurityRules": [
+                    {
+                        "name": "AllowVnetInBound",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowAzureLoadBalancerInBound",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from azure load balancer",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "AzureLoadBalancer",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllInBound",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all inbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowVnetOutBound",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowInternetOutBound",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to Internet",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "Internet",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllOutBound",
+                        "etag": "W/\"e8925712-75ec-46f3-93f1-89323b5e843d\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all outbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Network/publicIPAddresses/DemoPublicIPAddress' から一般化されました。",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_DemoPublicIPAddress_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "5637f18e-8ca5-4933-8554-c93079071991",
+                "ipAddress": "52.191.116.74",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Network/virtualNetworks/DemoVnet' から一般化されました。",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_DemoVnet_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "e4aef3d1-f976-477c-aadb-268504c0df01",
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "192.168.0.0/16"
+                    ]
+                },
+                "dhcpOptions": {
+                    "dnsServers": []
+                },
+                "subnets": [
+                    {
+                        "name": "DemoSubnet",
+                        "etag": "W/\"1a791015-5975-40ea-916c-d45c7574906e\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "192.168.1.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name'))]"
+                            }
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": []
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name'))]"
+            ]
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Compute/virtualMachines/DemoVM/extensions/BGInfo' から一般化されました。",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('virtualMachines_DemoVM_name'), '/', parameters('extensions_BGInfo_name'))]",
+            "apiVersion": "2017-03-30",
+            "location": "eastus",
+            "scale": null,
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "[parameters('extensions_BGInfo_name')]",
+                "typeHandlerVersion": "2.1",
+                "autoUpgradeMinorVersion": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_DemoVM_name'))]"
+            ]
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Network/networkSecurityGroups/DemoNetworkSecurityGroup/securityRules/DemoNSGRule' から一般化されました。",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name'), '/', parameters('securityRules_DemoNSGRule_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name'))]"
+            ]
+        },
+        {
+            "comments": "リソース '/subscriptions/3f5292c2-8195-4998-818e-7e2006a7a800/resourceGroups/DemoResourceGroupVM/providers/Microsoft.Network/virtualNetworks/DemoVnet/subnets/DemoSubnet' から一般化されました。",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('virtualNetworks_DemoVnet_name'), '/', parameters('subnets_DemoSubnet_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "192.168.1.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_DemoVnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_DemoNetworkSecurityGroup_name'))]"
+            ]
+        }
+    ]
+}
