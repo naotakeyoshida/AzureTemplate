@@ -25,21 +25,23 @@
       "databaseDTU":{  
          "type":"int",
          "allowedValues":[  
+            5,
             50,
             100
          ],
-         "defaultValue":50,
+         "defaultValue":5,
          "metadata":{  
-            "description":"Azure database for MySQL pricing tier : 50 DTU , 100 DTU"
+            "description":"Azure database for MySQL pricing tier : 5 DTU, 50 DTU , 100 DTU"
          }
       },
       "databaseSkuName":{  
          "type":"string",
          "allowedValues":[  
             "MYSQLB100",
-            "MYSQLB50"
+            "MYSQLB50",
+            "MYSQLF5"
          ],
-         "defaultValue":"MYSQLB50",
+         "defaultValue":"MYSQLF5",
          "metadata":{  
             "description":"Azure database for MySQL sku name : MYSQLB100 (Basic 100 DTU tier) or MYSQLB50 (Basic 50 DTU tier)"
          }
@@ -48,9 +50,10 @@
          "type":"int",
          "allowedValues":[  
             102400,
-            51200
+            51200,
+            32000
          ],
-         "defaultValue":51200,
+         "defaultValue":32000,
          "metadata":{  
             "description":"Azure database for MySQL Sku Size "
          }
